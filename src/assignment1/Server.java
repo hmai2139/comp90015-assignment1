@@ -8,8 +8,6 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 import java.net.*;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class Server {
 
@@ -22,8 +20,11 @@ public class Server {
         ServerSocket server = new ServerSocket(PORT);
         System.out.println("Server started, waiting for connection...");
 
-        // Infinite loop, awaiting potential requests from clients.
+        // Load the dictionary from source.
+        Dictionary dictionary = new Dictionary(args[1]);
+        Map<String, String[]> words = dictionary.allWords();
 
+        // Awaiting potential requests from clients.
         while (true) {
             Socket client = null;
 
@@ -87,7 +88,7 @@ class RequestHandler extends Thread {
 
                 if ( request.toLowerCase().equals("exit") ) {
                     // Terminate connection and close the socket per client's request.
-                    System.out.println("Terminating current connection...");
+                    System.out.println("Terminating connection with " + this.socket + " ...");
                     this.socket.close();
                     System.out.println("Connection terminated.");
                     break;
