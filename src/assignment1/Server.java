@@ -1,6 +1,8 @@
-/*
-** Multi-thread dictionary server.
-*/
+/**
+ * @author Hoang Viet Mai, vietm@student.unimelb.edu.au, 813361.
+ * COMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
+ * Server implementation.
+ */
 package assignment1;
 
 // Dependencies.
@@ -23,14 +25,14 @@ public class Server {
         System.out.println("Server started, waiting for connection...");
 
         // Load the dictionary from source.
-        Dictionary dictionary = new Dictionary(args[1]);
+        String source = args[1];
+        Dictionary dictionary = new Dictionary(source);
 
         // Awaiting potential requests from clients.
         while (true) {
             Socket client = null;
 
             try {
-
                 // Initialise socket to receive incoming requests from client.
                 client = server.accept();
                 System.out.println("A new client is connected : " + client);
@@ -41,7 +43,7 @@ public class Server {
                 System.out.println("Creating new thread for the client " + client + "...");
 
                 // Create a new RequestHandler thread.
-                Thread thread = new RequestHandler(client, in, out, dictionary);
+                Thread thread = new RequestHandler(client, in, out, dictionary, source);
 
                 // Start the thread.
                 thread.start();
@@ -73,16 +75,18 @@ class RequestHandler extends Thread {
     final Socket socket;
     final DataInputStream in;
     final DataOutputStream out;
+    final String source;
 
     // Dictionary.
     public Dictionary dictionary;
 
     // Class constructor.
-    public RequestHandler(Socket socket, DataInputStream in, DataOutputStream out, Dictionary dictionary) {
+    public RequestHandler(Socket socket, DataInputStream in, DataOutputStream out, Dictionary dictionary, String source) {
         this.socket = socket;
         this.in = in;
         this.out = out;
         this.dictionary = dictionary;
+        this.source = source;
     }
 
     // Take a client request (a JSON string) and convert it to a Request object.
@@ -135,18 +139,21 @@ class RequestHandler extends Thread {
                     case ADD:
                         reply = this.dictionary.add(request.word, request.meanings);
                         out.writeUTF(reply);
+                        dictionary.write(this.source);
                         break;
 
                     // Handle remove a word request.
                     case REMOVE:
                         reply = this.dictionary.remove(request.word);
                         out.writeUTF(reply);
+                        dictionary.write(this.source);
                         break;
 
                     // Handle update a word request.
                     case UPDATE:
                         reply = this.dictionary.update(request.word, request.meanings);
                         out.writeUTF(reply);
+                        dictionary.write(this.source);
                         break;
 
                     // Handle connection termination request.
@@ -157,6 +164,7 @@ class RequestHandler extends Thread {
                         System.out.println("Connection with " + socket + " has been terminated per client request.");
                         return;
 
+                    // Handle invalid request.
                     default:
                         out.writeUTF(INVALID);
                         break;

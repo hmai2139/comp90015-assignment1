@@ -1,4 +1,8 @@
-/* Dictionary representation. */
+/**
+ * @author Hoang Viet Mai, vietm@student.unimelb.edu.au, 813361.
+ * COMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
+ * Dictionary implementation.
+ */
 
 package assignment1;
 
@@ -97,5 +101,16 @@ public class Dictionary {
         // Valid update request.
         words.put(word, meanings);
         return("Success.");
+    }
+
+    // Write dictionary back to source JSON file.
+    public synchronized void write(String source) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(Paths.get(source).toFile(), words);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
