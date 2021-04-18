@@ -5,7 +5,7 @@ package assignment1;
 // Dependencies.
 import java.util.*;
 import java.nio.file.Paths;
-import com.fasterxml.jackson.core.JsonParser;
+
 import com.fasterxml.jackson.databind.*;
 
 /*
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.*;
 public class Dictionary {
 
     // All words in the dictionary.
-    public static Map<String, String[]> words;
+    public static Map<String, ArrayList<String>> words;
     
     // Class constructor.
     public Dictionary(String source) {
@@ -31,16 +31,23 @@ public class Dictionary {
     }
 
     // Query the meanings of a given word.
-    public synchronized Object query(String word) {
-        if (words.containsKey(word)) {
-            Object meanings = words.get(word);
-            return meanings;
+    public synchronized String query(String word) {
+        word = word.toLowerCase();
+
+        if ( words.containsKey(word) ) {
+            String reply = "";
+            ArrayList<String> meanings = words.get(word);
+            for (Object meaning: meanings) {
+                reply += (String) meaning +"\n";
+            }
+            return reply;
         }
         return("No such word exists.");
     }
 
     // Add a new word to dictionary.
-    public synchronized String add(String word, String[] meanings) throws Exception {
+    public synchronized String add(String word, ArrayList<String> meanings) throws Exception {
+        word = word.toLowerCase();
 
         // Word already exists in dictionary.
         if ( words.containsKey(word) ) {
@@ -48,7 +55,7 @@ public class Dictionary {
         }
 
         // No meanings provided.
-        if ( meanings.length == 0 || meanings == null) {
+        if ( meanings == null || meanings.size() == 0 ) {
             return("No meanings provided.");
         }
 
@@ -58,6 +65,7 @@ public class Dictionary {
 
     // Remove a word from dictionary.
     public synchronized String remove(String word) throws Exception {
+        word = word.toLowerCase();
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
@@ -69,7 +77,8 @@ public class Dictionary {
     }
 
     // Update a word's meanings.
-    public synchronized String update(String word, String[] meanings) throws Exception {
+    public synchronized String update(String word, ArrayList<String> meanings) throws Exception {
+        word = word.toLowerCase();
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
@@ -77,7 +86,7 @@ public class Dictionary {
         }
 
         // No new meanings are provided.
-        if (meanings == null || meanings.length == 0) {
+        if (meanings == null || meanings.size() == 0) {
             return("No meanings provided.");
         }
 

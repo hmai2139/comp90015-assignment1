@@ -7,7 +7,6 @@ package assignment1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 import java.net.*;
 
@@ -102,7 +101,7 @@ class RequestHandler extends Thread {
         Request request;
 
         while(true) {
-            Object reply;
+            String reply;
             try {
                 out.writeUTF("Awaiting your request...");
 
@@ -121,12 +120,8 @@ class RequestHandler extends Thread {
                     // Handle query request.
                     case QUERY:
                         if ( Dictionary.words.containsKey(request.word.toLowerCase()) ) {
-                            ArrayList meanings = (ArrayList) this.dictionary.query(request.word);
-                            reply = "";
-                            for (Object meaning: meanings) {
-                                reply += (String) meaning +"\n";
-                            }
-                            out.writeUTF((String) reply);
+                            reply = dictionary.query(request.word);
+                            out.writeUTF(reply);
                             break;
                         }
                         reply = "No such word exists";
@@ -177,10 +172,10 @@ class RequestHandler extends Thread {
 class Request {
     public String operation;
     public String word;
-    public String[] meanings;
+    public ArrayList<String> meanings;
 
     // Class constructor.
-    public Request(String operation, String word, String[] meanings) {
+    public Request(String operation, String word, ArrayList<String> meanings) {
         this.operation = operation;
         this.word = word;
         this.meanings = meanings;
