@@ -15,10 +15,20 @@ import java.net.*;
 
 public class Server {
 
+    // Allowed port range.
+    public static final int PORT_MIN = 1024;
+    public static final int PORT_MAX = 65535;
+
     public static void main(String[] args) throws Exception {
 
         // Get port from STDIN.
         final int PORT = Integer.parseInt(args[0]);
+
+        // Invalid port, exit program.
+        if (PORT < PORT_MIN || PORT > PORT_MAX) {
+            System.out.println("Invalid port, please enter a different port.");
+            System.exit(-1);
+        }
 
         // Open the Server Socket.
         ServerSocket server = new ServerSocket(PORT);

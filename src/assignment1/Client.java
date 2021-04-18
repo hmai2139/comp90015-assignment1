@@ -1,6 +1,7 @@
 /**
  * @author Hoang Viet Mai, vietm@student.unimelb.edu.au, 813361.
- * COMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
+ * C
+ * OMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
  * Client implementation.
  */
 package assignment1;
@@ -14,7 +15,7 @@ import java.util.Scanner;
 
 public class Client {
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws Exception {
 
         try {
             // Get server address and port from STDIN.
@@ -57,9 +58,15 @@ public class Client {
             in.close();
             out.close();
         }
+        catch (ConnectException e) {
+            System.out.println("Cannot connect to specified server.");
+            System.out.println("The server might be unavailable, or you might have entered invalid server details.");
+            System.exit(-1);
+        }
         catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
 
