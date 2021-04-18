@@ -39,8 +39,8 @@ public class Dictionary {
             // Convert meanings of word (an ArrayList<String>) to String form so we can return.
             ArrayList<String> meanings = words.get(word);
             String reply = "";
-            for (Object meaning: meanings) {
-                reply += (String) meaning +"\n";
+            for (String meaning: meanings) {
+                reply += meaning +"\n";
             }
             return reply;
         }
@@ -61,6 +61,7 @@ public class Dictionary {
             return("No meanings provided.");
         }
 
+        // Valid add request.
         words.put(word, meanings);
         return("Success.");
     }
@@ -74,6 +75,7 @@ public class Dictionary {
             return("No such word exists.");
         }
 
+        // Valid remove request.
         words.remove(word);
         return("Success.");
     }
@@ -92,6 +94,7 @@ public class Dictionary {
             return("No meanings provided.");
         }
 
+        // Valid update request.
         words.put(word, meanings);
         return("Success.");
     }

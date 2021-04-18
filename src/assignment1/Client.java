@@ -4,11 +4,14 @@
 package assignment1;
 
 // Dependencies.
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
 public class Client {
+
     public static void main(String args[]) throws IOException {
 
         try {
@@ -36,7 +39,7 @@ public class Client {
                 out.writeUTF(request);
 
                 // Terminate connection per client's request and break loop.
-                if ( request.toLowerCase().equals("exit") ) {
+                if ( request.equals("{\"operation\": \"exit\"}") ) {
                     System.out.println("Terminating current connection...");
                     client.close();
                     System.out.println("Connection terminated.");

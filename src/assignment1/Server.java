@@ -4,6 +4,7 @@
 package assignment1;
 
 // Dependencies.
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
@@ -65,6 +66,9 @@ class RequestHandler extends Thread {
     private final String UPDATE = "update";
     private final String EXIT = "exit";
 
+    // Error messages.
+    private final String INVALID = "Invalid request.";
+
     // Socket, input stream, output stream.
     final Socket socket;
     final DataInputStream in;
@@ -103,7 +107,7 @@ class RequestHandler extends Thread {
         while(true) {
             String reply;
             try {
-                out.writeUTF("Please enter your request: ");
+                out.writeUTF("Please enter your request:");
 
                 // Receive request (a JSON string) from client and convert it to a Request Object.
                 requestJson = in.readUTF();
@@ -111,7 +115,7 @@ class RequestHandler extends Thread {
 
                 // Empty request.
                 if (request == null) {
-                    out.writeUTF("Invalid request.");
+                    out.writeUTF(INVALID);
                     continue;
                 }
 
@@ -119,6 +123,10 @@ class RequestHandler extends Thread {
 
                     // Handle query request.
                     case QUERY:
+                        if (request.word == null) {
+                            out.writeUTF(INVALID);
+                            break;
+                        }
                         reply = dictionary.query(request.word);
                         out.writeUTF(reply);
                         break;
@@ -126,19 +134,19 @@ class RequestHandler extends Thread {
                     // Handle add a word request.
                     case ADD:
                         reply = this.dictionary.add(request.word, request.meanings);
-                        out.writeUTF((String) reply);
+                        out.writeUTF(reply);
                         break;
 
                     // Handle remove a word request.
                     case REMOVE:
                         reply = this.dictionary.remove(request.word);
-                        out.writeUTF((String) reply);
+                        out.writeUTF(reply);
                         break;
 
                     // Handle update a word request.
                     case UPDATE:
                         reply = this.dictionary.update(request.word, request.meanings);
-                        out.writeUTF((String) reply);
+                        out.writeUTF(reply);
                         break;
 
                     // Handle connection termination request.
@@ -146,22 +154,26 @@ class RequestHandler extends Thread {
                         // Terminate connection and close the socket per client's request.
                         System.out.println("Terminating connection with " + this.socket + " ...");
                         this.socket.close();
-                        System.out.println("Connection terminated.");
-                        break;
+                        System.out.println("Connection with " + socket + " has been terminated per client request.");
+                        return;
 
                     default:
-                        out.writeUTF("Invalid request.");
+                        out.writeUTF(INVALID);
                         break;
                 }
             }
+            // Socket error, close thread.
             catch (SocketException e) {
-                System.out.println("Connection with " + socket + " has been terminated due to socket error.");
+                System.out.println("Socket error: connection with " + socket + " has been terminated.");
                 return;
             }
             catch (IOException e) {
-                System.out.println(e.getMessage());
-                return;
-            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            catch (NullPointerException e) {
+                System.out.println(INVALID);
+            }
+            catch (Exception e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
