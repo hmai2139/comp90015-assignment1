@@ -42,6 +42,10 @@ public class Client {
                     System.out.println("Connection terminated.");
                     break;
                 }
+
+                // Get reply from client handler.
+                String reply = in.readUTF();
+                System.out.println(reply);
             }
             // Close resources.
             scanner.close();

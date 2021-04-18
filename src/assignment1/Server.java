@@ -1,9 +1,11 @@
 /*
 ** Multi-thread dictionary server.
- */
+*/
 package assignment1;
 
 // Dependencies.
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -37,10 +39,10 @@ public class Server {
                 // Create I/O streams to communicate with client.
                 DataInputStream in = new DataInputStream(client.getInputStream());
                 DataOutputStream out = new DataOutputStream(client.getOutputStream());
-                System.out.println("Creating new thread for the current client...");
+                System.out.println("Creating new thread for the client " + client + "...");
 
                 // Create a new RequestHandler thread.
-                Thread thread = new RequestHandler(client, in, out);
+                Thread thread = new RequestHandler(client, in, out, dictionary);
 
                 // Start the thread.
                 thread.start();
@@ -54,49 +56,127 @@ public class Server {
 }
 
 /*
- ** Handles clients' requests.
- */
+** Handles clients' requests.
+*/
 class RequestHandler extends Thread {
+
+    // Types of request.
+    private final String QUERY = "query";
+    private final String ADD = "add";
+    private final String REMOVE = "remove";
+    private final String UPDATE = "update";
+    private final String EXIT = "exit";
 
     // Socket, input stream, output stream.
     final Socket socket;
     final DataInputStream in;
     final DataOutputStream out;
 
+    // Dictionary.
+    public Dictionary dictionary;
+
     // Class constructor.
-    public RequestHandler(Socket socket, DataInputStream in, DataOutputStream out) {
+    public RequestHandler(Socket socket, DataInputStream in, DataOutputStream out, Dictionary dictionary) {
         this.socket = socket;
         this.in = in;
         this.out = out;
+        this.dictionary = dictionary;
+    }
+
+    // Take a client request (a JSON string) and convert it to a Request object.
+    private Request parseRequest(String requestJSON) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Request request = mapper.readValue(requestJSON, Request.class);
+            return request;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Overrides default run method.
     @Override
     public void run() {
-        String request;
-        String reply;
+        String requestJson;
+        Request request;
 
         while(true) {
+            Object reply;
             try {
-                out.writeUTF("Enter \"Exit\" to terminate the current connection.");
-
-                // Ask client for request.
                 out.writeUTF("Awaiting your request...");
 
-                // Receive request from client.
-                request = in.readUTF();
+                // Receive request (a JSON string) from client and convert it to a Request Object.
+                requestJson = in.readUTF();
+                request = parseRequest(requestJson);
 
-                if ( request.toLowerCase().equals("exit") ) {
-                    // Terminate connection and close the socket per client's request.
-                    System.out.println("Terminating connection with " + this.socket + " ...");
-                    this.socket.close();
-                    System.out.println("Connection terminated.");
-                    break;
+                switch (request.operation.toLowerCase()) {
+
+                    // Handle query request.
+                    case QUERY:
+                        reply = this.dictionary.query(request.word);
+                        out.writeUTF((String) reply);
+                        break;
+
+                    // Handle add a word request.
+                    case ADD:
+                        reply = this.dictionary.add(request.word, request.meanings);
+                        out.writeUTF((String) reply);
+                        break;
+
+                    // Handle remove a word request.
+                    case REMOVE:
+                        reply = this.dictionary.remove(request.word);
+                        out.writeUTF((String) reply);
+                        break;
+
+                    // Handle update a word request.
+                    case UPDATE:
+                        reply = this.dictionary.update(request.word, request.meanings);
+                        out.writeUTF((String) reply);
+                        break;
+
+                    // Handle connection termination request.
+                    case EXIT:
+                        // Terminate connection and close the socket per client's request.
+                        System.out.println("Terminating connection with " + this.socket + " ...");
+                        this.socket.close();
+                        System.out.println("Connection terminated.");
+                        break;
+
+                    default:
+                        out.writeUTF("Invalid request.");
+                        break;
                 }
             }
+
             catch (IOException e) {
+                e.printStackTrace();
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+}
+
+/*
+** Representation of a given client request.
+*/
+class Request {
+    public String operation;
+    public String word;
+    public String[] meanings;
+
+    // Class constructor.
+    public Request(String operation, String word, String[] meanings) {
+        this.operation = operation;
+        this.word = word;
+        this.meanings = meanings;
+    }
+
+    // Default constructor.
+    public Request() {
     }
 }

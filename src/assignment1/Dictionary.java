@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.*;
 public class Dictionary {
 
     // All words in the dictionary.
-    private static Map<String, String[]> words;
+    public static Map<String, String[]> words;
     
     // Class constructor.
     public Dictionary(String source) {
@@ -35,13 +35,17 @@ public class Dictionary {
         return words;
     }
 
-    // Check if a given word already exists in the Dictionary.
-    public synchronized boolean contains(String word) {
-        return words.containsKey(word);
+    // Query the meanings of a given word.
+    public synchronized Object query(String word) {
+        if (words.containsKey(word)) {
+            String[] meanings = words.get(word);
+            return meanings;
+        }
+        return("No such word exists.");
     }
 
     // Query the meanings of a given word.
-    public synchronized String[] meaningsOf(String word) throws Exception {
+    public synchronized Object meaningsOf(String word) throws Exception {
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
@@ -55,11 +59,16 @@ public class Dictionary {
 
         // Word already exists in dictionary.
         if ( words.containsKey(word) ) {
-            throw new Exception("This word already exists.");
+            return("This word already exists.");
+        }
+
+        // No meanings provided.
+        if ( meanings.length == 0 || meanings == null) {
+            return("No meanings provided.");
         }
 
         words.put(word, meanings);
-        return ("Success.");
+        return("Success.");
     }
 
     // Remove a word from dictionary.
@@ -67,62 +76,27 @@ public class Dictionary {
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
-            throw new Exception("No such word exists.");
+            return("No such word exists.");
         }
 
         words.remove(word);
-        return ("Success.");
+        return("Success.");
     }
 
     // Update a word's meanings.
-    public synchronized String remove(String word, String[] meanings) throws Exception {
+    public synchronized String update(String word, String[] meanings) throws Exception {
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
-            throw new Exception("No such word exists.");
+            return("No such word exists.");
         }
 
         // No new meanings are provided.
         if (meanings.length == 0 || meanings == null) {
-            throw new Exception("No meanings provided.");
+            return("No meanings provided.");
         }
 
         words.put(word, meanings);
-        return ("Success.");
-    }
-}
-
-/*
-** Representation of a word in dictionary.
- */
-class Word {
-
-    // Word and its meanings.
-    private String word;
-    private String[] meanings;
-
-    // Class constructor.
-    public Word (String word, String[] meanings) {
-        this.word = word;
-        this.meanings = meanings;
-    }
-
-    // Default constructor.
-    public Word() {
-    }
-
-    // Get word.
-    public String getWord() {
-        return this.word;
-    }
-
-    // Get meanings of word.
-    public String[] getMeanings() {
-        return this.meanings;
-    }
-
-    // Set meanings of word.
-    public void setMeanings(String[] newMeanings) {
-        this.meanings = newMeanings;
+        return("Success.");
     }
 }
