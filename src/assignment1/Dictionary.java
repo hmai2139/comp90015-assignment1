@@ -29,12 +29,7 @@ public class Dictionary {
             e.printStackTrace();
         }
     }
-
-    // Get all words of Dictionary.
-    public synchronized Map<String, String[]> allWords () {
-        return words;
-    }
-
+    
     // Query the meanings of a given word.
     public synchronized Object query(String word) {
         if (words.containsKey(word)) {

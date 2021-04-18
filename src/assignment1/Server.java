@@ -24,7 +24,6 @@ public class Server {
 
         // Load the dictionary from source.
         Dictionary dictionary = new Dictionary(args[1]);
-        Map<String, String[]> words = dictionary.allWords();
 
         // Awaiting potential requests from clients.
         while (true) {
