@@ -11,8 +11,9 @@ public class Test {
             String json = "{\"operation\":\"Thinking in Java\",\"word\":\"978-0131872486\"" +
                     ",\"meanings\":[\"Bruce Eckel\", \"CAC\"]}";
             Dictionary dictionary = new Dictionary("dictionary.json");
-            //ArrayList meanings = (ArrayList) dictionary.query("socket");
+            ArrayList meanings = (ArrayList) dictionary.query("socket");
 
+            meanings.forEach(n -> System.out.println(n));
             //System.out.println(Arrays.toString(meanings));
 
             // create object mapper instance

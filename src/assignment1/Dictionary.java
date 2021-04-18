@@ -38,20 +38,10 @@ public class Dictionary {
     // Query the meanings of a given word.
     public synchronized Object query(String word) {
         if (words.containsKey(word)) {
-            String[] meanings = words.get(word);
+            Object meanings = words.get(word);
             return meanings;
         }
         return("No such word exists.");
-    }
-
-    // Query the meanings of a given word.
-    public synchronized Object meaningsOf(String word) throws Exception {
-
-        // Word doesn't exist in dictionary.
-        if ( !words.containsKey(word) ) {
-            throw new Exception("No such word exists.");
-        }
-        return words.get(word);
     }
 
     // Add a new word to dictionary.

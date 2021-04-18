@@ -111,11 +111,26 @@ class RequestHandler extends Thread {
                 requestJson = in.readUTF();
                 request = parseRequest(requestJson);
 
+                // Empty request.
+                if (request == null) {
+                    out.writeUTF("Invalid request.");
+                    continue;
+                }
+
                 switch (request.operation.toLowerCase()) {
 
                     // Handle query request.
                     case QUERY:
-                        reply = this.dictionary.query(request.word);
+                        if ( Dictionary.words.containsKey(request.word.toLowerCase()) ) {
+                            ArrayList meanings = (ArrayList) this.dictionary.query(request.word);
+                            reply = "";
+                            for (Object meaning: meanings) {
+                                reply += (String) meaning +"\n";
+                            }
+                            out.writeUTF((String) reply);
+                            break;
+                        }
+                        reply = "No such word exists";
                         out.writeUTF((String) reply);
                         break;
 
@@ -150,11 +165,7 @@ class RequestHandler extends Thread {
                         break;
                 }
             }
-
-            catch (IOException e) {
-                e.printStackTrace();
-
-            } catch (Exception e) {
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
