@@ -35,8 +35,10 @@ public class Dictionary {
         word = word.toLowerCase();
 
         if ( words.containsKey(word) ) {
-            String reply = "";
+
+            // Convert meanings of word (an ArrayList<String>) to String form so we can return.
             ArrayList<String> meanings = words.get(word);
+            String reply = "";
             for (Object meaning: meanings) {
                 reply += (String) meaning +"\n";
             }

@@ -12,7 +12,7 @@ import java.net.*;
 
 public class Server {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
         // Get port from STDIN.
         final int PORT = Integer.parseInt(args[0]);
@@ -103,7 +103,7 @@ class RequestHandler extends Thread {
         while(true) {
             String reply;
             try {
-                out.writeUTF("Awaiting your request...");
+                out.writeUTF("Please enter your request: ");
 
                 // Receive request (a JSON string) from client and convert it to a Request Object.
                 requestJson = in.readUTF();
@@ -119,13 +119,8 @@ class RequestHandler extends Thread {
 
                     // Handle query request.
                     case QUERY:
-                        if ( Dictionary.words.containsKey(request.word.toLowerCase()) ) {
-                            reply = dictionary.query(request.word);
-                            out.writeUTF(reply);
-                            break;
-                        }
-                        reply = "No such word exists";
-                        out.writeUTF((String) reply);
+                        reply = dictionary.query(request.word);
+                        out.writeUTF(reply);
                         break;
 
                     // Handle add a word request.
@@ -159,7 +154,15 @@ class RequestHandler extends Thread {
                         break;
                 }
             }
-            catch (Exception e) {
+            catch (SocketException e) {
+                System.out.println("Connection with " + socket + " has been terminated due to socket error.");
+                return;
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+                return;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 e.printStackTrace();
             }
         }
