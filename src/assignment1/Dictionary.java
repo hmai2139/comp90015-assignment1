@@ -29,7 +29,7 @@ public class Dictionary {
             e.printStackTrace();
         }
     }
-    
+
     // Query the meanings of a given word.
     public synchronized Object query(String word) {
         if (words.containsKey(word)) {
@@ -77,7 +77,7 @@ public class Dictionary {
         }
 
         // No new meanings are provided.
-        if (meanings.length == 0 || meanings == null) {
+        if (meanings == null || meanings.length == 0) {
             return("No meanings provided.");
         }
 
