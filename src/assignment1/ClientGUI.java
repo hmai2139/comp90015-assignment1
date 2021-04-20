@@ -30,6 +30,10 @@ public class ClientGUI {
     private JPanel wordFieldPanel;
     private JOptionPane optionPane;
 
+    // Error message components.
+    public static JFrame errorFrame;
+    public static JPanel errorPanel;
+
     // GUI frame.
     private JFrame frame;
 
@@ -44,9 +48,9 @@ public class ClientGUI {
         // Initialise frame.
         frame = new JFrame("Dictionary client");
         frame.setMinimumSize(new Dimension(450, 340));
-        frame.setBounds(100, 100, 450, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setLocationRelativeTo(null);
 
         queryButton.addActionListener(new ActionListener() {
             @Override
@@ -69,6 +73,8 @@ public class ClientGUI {
                 }
                 catch (Exception exception) {
                     textLogArea.append(exception.getMessage());
+                    textLogArea.append("\n");
+                    textLogArea.append("If the problem persists, try relaunching the client.");
                     textLogArea.append("\n");
                     System.exit(-1);
                 }
@@ -105,7 +111,6 @@ public class ClientGUI {
                 catch (Exception exception) {
                     textLogArea.append(exception.getMessage());
                     textLogArea.append("\n");
-                    System.exit(-1);
                 }
             }
         });
@@ -142,7 +147,6 @@ public class ClientGUI {
                 catch (Exception exception) {
                     textLogArea.append(exception.getMessage());
                     textLogArea.append("\n");
-                    System.exit(-1);
                 }
             }
         });
@@ -172,7 +176,6 @@ public class ClientGUI {
                 catch (Exception exception) {
                     textLogArea.append(exception.getMessage());
                     textLogArea.append("\n");
-                    System.exit(-1);
                 }
             }
         });
@@ -183,6 +186,16 @@ public class ClientGUI {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss: ");
         LocalDateTime now = LocalDateTime.now();
         return(dateTimeFormatter.format(now));
+    }
+
+    // Display error message if error is encountered during start-up.
+    public static void showErrorPanel(String message, String error) {
+        errorFrame = new JFrame("Dictionary client");
+        errorFrame.setMinimumSize(new Dimension(450, 340));
+        errorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        errorFrame.pack();
+        errorFrame.setLocationRelativeTo(null);
+        JOptionPane.showMessageDialog(errorFrame, message, error, JOptionPane.ERROR_MESSAGE);
     }
 
     public JFrame getFrame() {

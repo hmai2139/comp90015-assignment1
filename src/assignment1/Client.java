@@ -62,16 +62,28 @@ public class Client {
                 System.out.println(reply);
             }
         }
+
+        // Handle connection error.
         catch (ConnectException e) {
             System.out.println("Cannot connect to specified server.");
             System.out.println("The server might be unavailable, or you might have entered invalid server details.");
+
+            // Display error message in GUI.
+            ClientGUI.showErrorPanel(
+                    "The server might be unavailable, or you might have entered invalid server details.",
+                    "Cannot connect to the specified server");
+
+            // Exit.
             System.exit(-1);
         }
+
+        // Handle socket error.
         catch (SocketException e) {
             System.out.println("Socket error: connection to server has been terminated.");
             System.out.println("Please try relaunching the client.");
             System.exit(-1);
         }
+
         catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
