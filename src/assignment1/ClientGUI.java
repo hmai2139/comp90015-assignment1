@@ -63,7 +63,7 @@ public class ClientGUI {
                         textLogArea.append(localDateTime());
                         textLogArea.append(response);
                         textLogArea.append("\n");
-                        textLogArea.setText("");
+                        wordField.setText("");
                     }
                 }
                 catch (IOException ioException) {
@@ -97,7 +97,8 @@ public class ClientGUI {
                         textLogArea.append(localDateTime());
                         textLogArea.append(response);
                         textLogArea.append("\n");
-                        textLogArea.setText("");
+                        wordField.setText("");
+                        meaningsField.setText("");
                     }
                 }
                 catch (IOException ioException) {
@@ -131,7 +132,8 @@ public class ClientGUI {
                         textLogArea.append(localDateTime());
                         textLogArea.append(response);
                         textLogArea.append("\n");
-                        textLogArea.setText("");
+                        wordField.setText("");
+                        meaningsField.setText("");
                     }
                 }
                 catch (IOException ioException) {
@@ -159,7 +161,7 @@ public class ClientGUI {
                         textLogArea.append(localDateTime());
                         textLogArea.append(response);
                         textLogArea.append("\n");
-                        textLogArea.setText("");
+                        wordField.setText("");
                     }
                 }
                 catch (IOException ioException) {

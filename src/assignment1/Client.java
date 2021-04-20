@@ -133,7 +133,7 @@ public class Client {
 
     // Submit update request.
     public String update(String word, String meanings, DataOutputStream out, DataInputStream in) throws IOException {
-        String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": [%s] }",
+        String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": [\"%s\"] }",
                 UPDATE, word, meanings);
         out.writeUTF(requestJSON);
         String reply = in.readUTF();
