@@ -26,7 +26,7 @@ public class Server {
 
         // Invalid port, exit program.
         if (PORT < PORT_MIN || PORT > PORT_MAX) {
-            System.out.println("Invalid port, please enter a different port.");
+            System.out.println(String.format("Port must be in range %s-%s. ", PORT_MIN, PORT_MAX ));
             System.exit(-1);
         }
 
@@ -115,17 +115,16 @@ class RequestHandler extends Thread {
     // Overrides default run method.
     @Override
     public void run() {
-        String requestJson;
+        String requestJSON;
         Request request;
 
         while(true) {
             String reply;
             try {
-                out.writeUTF("Please enter your request:");
-
                 // Receive request (a JSON string) from client and convert it to a Request Object.
-                requestJson = in.readUTF();
-                request = parseRequest(requestJson);
+                requestJSON = in.readUTF();
+                System.out.println(requestJSON);
+                request = parseRequest(requestJSON);
 
                 // Empty request.
                 if (request == null) {

@@ -55,6 +55,11 @@ public class Dictionary {
     public synchronized String add(String word, ArrayList<String> meanings) throws Exception {
         word = word.toLowerCase();
 
+        // No words provided.
+        if (word == null || word.equals("")) {
+            return("Invalid request: no words provided.");
+        }
+
         // Word already exists in dictionary.
         if ( words.containsKey(word) ) {
             return("This word already exists.");
@@ -74,6 +79,11 @@ public class Dictionary {
     public synchronized String remove(String word) throws Exception {
         word = word.toLowerCase();
 
+        // No words provided.
+        if (word == null || word.equals("")) {
+            return("Invalid request: no word provided.");
+        }
+
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
             return("No such word exists.");
@@ -87,6 +97,11 @@ public class Dictionary {
     // Update a word's meanings.
     public synchronized String update(String word, ArrayList<String> meanings) throws Exception {
         word = word.toLowerCase();
+
+        // No words provided.
+        if (word == null || word.equals("")) {
+            return("Invalid request: no word provided.");
+        }
 
         // Word doesn't exist in dictionary.
         if ( !words.containsKey(word) ) {
