@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -56,8 +58,7 @@ public class ClientGUI {
                     if (word == null || word.equals("")) {
                         JOptionPane.showMessageDialog(frame, "Please enter a word.",
                                 "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else {
+                    } else {
                         // Perform operation, then clear the text field.
                         String response = client.query(word, client.getOutputStream(), client.getInputStream());
                         textLogArea.append(localDateTime());
@@ -66,8 +67,10 @@ public class ClientGUI {
                         wordField.setText("");
                     }
                 }
-                catch (IOException ioException) {
-                    ioException.printStackTrace();
+                catch (Exception exception) {
+                    textLogArea.append(exception.getMessage());
+                    textLogArea.append("\n");
+                    System.exit(-1);
                 }
             }
         });
@@ -89,9 +92,7 @@ public class ClientGUI {
                     if (meanings == null || meanings.equals("")) {
                         JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
                                 "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    else {
+                    } else {
                         // Perform operation, then clear the text field.
                         String response = client.add(word, meanings, client.getOutputStream(), client.getInputStream());
                         textLogArea.append(localDateTime());
@@ -101,8 +102,10 @@ public class ClientGUI {
                         meaningsField.setText("");
                     }
                 }
-                catch (IOException ioException) {
-                    ioException.printStackTrace();
+                catch (Exception exception) {
+                    textLogArea.append(exception.getMessage());
+                    textLogArea.append("\n");
+                    System.exit(-1);
                 }
             }
         });
@@ -136,8 +139,10 @@ public class ClientGUI {
                         meaningsField.setText("");
                     }
                 }
-                catch (IOException ioException) {
-                    ioException.printStackTrace();
+                catch (Exception exception) {
+                    textLogArea.append(exception.getMessage());
+                    textLogArea.append("\n");
+                    System.exit(-1);
                 }
             }
         });
@@ -164,21 +169,24 @@ public class ClientGUI {
                         wordField.setText("");
                     }
                 }
-                catch (IOException ioException) {
-                    ioException.printStackTrace();
+                catch (Exception exception) {
+                    textLogArea.append(exception.getMessage());
+                    textLogArea.append("\n");
+                    System.exit(-1);
                 }
             }
         });
+    }
+
+    // Get local date and time.
+    public String localDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss: ");
+        LocalDateTime now = LocalDateTime.now();
+        return(dateTimeFormatter.format(now));
     }
 
     public JFrame getFrame() {
         return frame;
     }
 
-    // Get local date and time.
-    public String localDateTime() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss: ");
-        LocalDateTime now = LocalDateTime.now();
-        return(dtf.format(now));
-    }
 }

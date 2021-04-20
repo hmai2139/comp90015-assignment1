@@ -42,9 +42,9 @@ public class Dictionary {
 
             // Convert meanings of word (an ArrayList<String>) to String form so we can return.
             ArrayList<String> meanings = words.get(word);
-            String reply = "";
+            String reply = "\n";
             for (String meaning: meanings) {
-                reply += meaning +"\n";
+                reply += "- " + meaning +"\n";
             }
             return reply;
         }
@@ -72,7 +72,7 @@ public class Dictionary {
 
         // Valid add request.
         words.put(word, meanings);
-        return("Success.");
+        return String.format("\"%s\" was successfully added.", word);
     }
 
     // Remove a word from dictionary.
@@ -91,7 +91,7 @@ public class Dictionary {
 
         // Valid remove request.
         words.remove(word);
-        return("Success.");
+        return String.format("\"%s\" was successfully removed.", word);
     }
 
     // Update a word's meanings.
@@ -115,7 +115,7 @@ public class Dictionary {
 
         // Valid update request.
         words.put(word, meanings);
-        return("Success.");
+        return String.format("\"%s\" was successfully updated.", word);
     }
 
     // Write dictionary back to source JSON file.

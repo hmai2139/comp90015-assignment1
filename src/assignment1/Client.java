@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.json.simple.JSONArray;
 
 public class Client {
 
@@ -66,8 +67,14 @@ public class Client {
             System.out.println("The server might be unavailable, or you might have entered invalid server details.");
             System.exit(-1);
         }
+        catch (SocketException e) {
+            System.out.println("Socket error: connection to server has been terminated.");
+            System.out.println("Please try relaunching the client.");
+            System.exit(-1);
+        }
         catch (Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 
@@ -88,44 +95,81 @@ public class Client {
     }
 
     // Close client.
-    private void exit(Socket socket) throws IOException {
+    private void exit(Socket socket) throws Exception {
         socket.close();
     }
 
     // Submit query request.
-    public String query(String word, DataOutputStream out, DataInputStream in) throws IOException {
-        String requestJSON = String.format("{ \"operation\": \"%s\", \"word\": \"%s\" }",
-                QUERY, word);
-        out.writeUTF(requestJSON);
-        String reply = in.readUTF();
-        return reply;
+    public String query(String word, DataOutputStream out, DataInputStream in) {
+        try {
+            String requestJSON = String.format("{ \"operation\": \"%s\", \"word\": \"%s\" }",
+                    QUERY, word);
+            out.writeUTF(requestJSON);
+            String reply = in.readUTF();
+            return reply;
+        }
+        catch (Exception e) {
+            String reply = e.getMessage();
+            return reply;
+        }
     }
 
     // Submit add request.
-    public String add(String word, String meanings, DataOutputStream out, DataInputStream in) throws IOException {
-        String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": [\"%s\"] }",
-                ADD, word, meanings);
-        out.writeUTF(requestJSON);
-        String reply = in.readUTF();
-        return reply;
+    public String add(String word, String meanings, DataOutputStream out, DataInputStream in){
+        try {
+            JSONArray meaningsJSON = stringToJSONArray(meanings);
+            String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": %s }",
+                    ADD, word, meaningsJSON);
+            out.writeUTF(requestJSON);
+            String reply = in.readUTF();
+            return reply;
+        }
+        catch (Exception e) {
+            String reply = e.getMessage();
+            return reply;
+        }
     }
 
     // Submit remove request.
-    public String remove(String word, DataOutputStream out, DataInputStream in) throws IOException {
-        String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\" }",
-                REMOVE, word);
-        out.writeUTF(requestJSON);
-        String reply = in.readUTF();
-        return reply;
+    public String remove(String word, DataOutputStream out, DataInputStream in) {
+        try {
+            String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\" }",
+                    REMOVE, word);
+            out.writeUTF(requestJSON);
+            String reply = in.readUTF();
+            return reply;
+        }
+        catch (Exception e) {
+            String reply = e.getMessage();
+            return reply;
+        }
     }
 
     // Submit update request.
-    public String update(String word, String meanings, DataOutputStream out, DataInputStream in) throws IOException {
-        String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": [\"%s\"] }",
-                UPDATE, word, meanings);
-        out.writeUTF(requestJSON);
-        String reply = in.readUTF();
-        return reply;
+    public String update(String word, String meanings, DataOutputStream out, DataInputStream in) {
+        try {
+            JSONArray meaningsJSON = stringToJSONArray(meanings);
+            String requestJSON = String.format("{\"operation\": \"%s\", \"word\": \"%s\", \"meanings\": %s }",
+                    UPDATE, word, meaningsJSON);
+            out.writeUTF(requestJSON);
+            String reply = in.readUTF();
+            return reply;
+        }
+        catch (Exception e) {
+            String reply = e.getMessage();
+            return reply;
+        }
+    }
+
+    // Convert comma-separated meanings string from client GUI into JSON array.
+    public JSONArray stringToJSONArray(String meanings) {
+        String[] meaningsArray = meanings.split(",");
+        JSONArray meaningsJSON = new JSONArray();
+
+        for (int i = 0; i < meaningsArray.length; i++) {
+            meaningsJSON.add(meaningsArray[i]);
+        }
+        return meaningsJSON;
     }
 
     public DataOutputStream getOutputStream() {
