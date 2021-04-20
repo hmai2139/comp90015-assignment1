@@ -42,9 +42,9 @@ public class Dictionary {
 
             // Convert meanings of word (an ArrayList<String>) to String form so we can return.
             ArrayList<String> meanings = words.get(word);
-            String reply = "\n";
+            String reply = "";
             for (String meaning: meanings) {
-                reply += "- " + meaning +"\n";
+                reply += "\n" + "- " + meaning;
             }
             return reply;
         }

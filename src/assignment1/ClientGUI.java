@@ -74,9 +74,6 @@ public class ClientGUI {
                 catch (Exception exception) {
                     textLogArea.append(exception.getMessage());
                     textLogArea.append("\n");
-                    textLogArea.append("If the problem persists, try relaunching the client.");
-                    textLogArea.append("\n");
-                    System.exit(-1);
                 }
             }
         });
