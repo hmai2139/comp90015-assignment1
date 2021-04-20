@@ -56,22 +56,10 @@ public class Client {
                 String request = client.scanner.nextLine();
                 out.writeUTF(request);
 
-                // Terminate connection per client's request and break loop.
-                if (request.equals(String.format("{\"operation\": %s}", EXIT))) {
-                    System.out.println("Terminating current connection...");
-                    socket.close();
-                    System.out.println("Connection terminated.");
-                    break;
-                }
-
                 // Get reply from client handler.
                 String reply = in.readUTF();
                 System.out.println(reply);
             }
-            // Close resources.
-            scanner.close();
-            in.close();
-            out.close();
         }
         catch (ConnectException e) {
             System.out.println("Cannot connect to specified server.");
