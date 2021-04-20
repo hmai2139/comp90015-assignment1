@@ -3,6 +3,7 @@
  * COMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
  * Server implementation.
  */
+
 package assignment1;
 
 // Dependencies.

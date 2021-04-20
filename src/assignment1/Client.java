@@ -1,7 +1,6 @@
 /**
  * @author Hoang Viet Mai, vietm@student.unimelb.edu.au, 813361.
- * C
- * OMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
+ * COMP90015 S1 2021, Assignment 1, Multi-threaded Dictionary Server.
  * Client implementation.
  */
 package assignment1;
