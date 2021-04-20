@@ -72,7 +72,6 @@ public class Client {
             ClientGUI.showErrorPanel(
                     "The server might be unavailable, or you might have entered invalid server details.",
                     "Cannot connect to the specified server");
-
             // Exit.
             System.exit(-1);
         }
@@ -81,12 +80,10 @@ public class Client {
         catch (SocketException e) {
             System.out.println("Socket error: connection to server has been terminated.");
             System.out.println("Please try relaunching the client.");
-            System.exit(-1);
         }
 
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(-1);
         }
     }
 
