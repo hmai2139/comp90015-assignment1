@@ -6,10 +6,10 @@
 package assignment1;
 
 // Dependencies.
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.net.*;
 
@@ -148,13 +148,17 @@ class RequestHandler extends Thread {
                     case ADD:
                         reply = this.dictionary.add(request.word, request.meanings);
                         out.writeUTF(reply);
-                        dictionary.write(this.source);
+
+                        // Append the new word to source dictionary..
+                        appendJSON(request.word + ":" + request.meanings);
                         break;
 
                     // Handle remove a word request.
                     case REMOVE:
                         reply = this.dictionary.remove(request.word);
                         out.writeUTF(reply);
+
+                        // Remove word from source dictionary.
                         dictionary.write(this.source);
                         break;
 
@@ -162,6 +166,8 @@ class RequestHandler extends Thread {
                     case UPDATE:
                         reply = this.dictionary.update(request.word, request.meanings);
                         out.writeUTF(reply);
+
+                        // Update word in source dictionary.
                         dictionary.write(this.source);
                         break;
 
@@ -195,6 +201,13 @@ class RequestHandler extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    // Append a JSON object to the JSON source file.
+    private void appendJSON(String jsonToAppend) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        final String json =  mapper.writeValueAsString(jsonToAppend);
+        Files.write(new File(this.source).toPath(), Arrays.asList(json), StandardOpenOption.APPEND);
     }
 }
 
