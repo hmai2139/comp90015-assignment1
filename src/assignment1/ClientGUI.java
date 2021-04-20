@@ -60,7 +60,9 @@ public class ClientGUI {
                 if (word == null || word.equals("")) {
                     JOptionPane.showMessageDialog(frame, "Please enter a word.",
                             "Warning", JOptionPane.ERROR_MESSAGE);
-                } else {
+                }
+
+                else {
                     // Perform operation, then clear the text field.
                     String response = client.query(word, client.getOutputStream(), client.getInputStream());
                     textLogArea.append(localDateTime());
@@ -90,7 +92,9 @@ public class ClientGUI {
                 if (meanings == null || meanings.equals("")) {
                     JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
                             "Warning", JOptionPane.ERROR_MESSAGE);
-                } else {
+                }
+
+                else {
                     // Perform operation, then clear the text field.
                     String response = client.add(word, meanings, client.getOutputStream(), client.getInputStream());
                     textLogArea.append(localDateTime());
