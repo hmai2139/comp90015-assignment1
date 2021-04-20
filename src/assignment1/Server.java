@@ -27,7 +27,7 @@ public class Server {
 
         // Invalid port, exit program.
         if (PORT < PORT_MIN || PORT > PORT_MAX) {
-            System.out.println(String.format("Port must be in range %s-%s. ", PORT_MIN, PORT_MAX ));
+            System.out.printf("Port must be in range %s-%s. %n", PORT_MIN, PORT_MAX );
             System.exit(-1);
         }
 

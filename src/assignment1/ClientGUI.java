@@ -7,11 +7,6 @@ package assignment1;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -40,10 +35,10 @@ public class ClientGUI {
     public static JPanel errorPanel;
 
     // GUI frame.
-    private JFrame frame;
+    private final JFrame frame;
 
     // Dictionary client.
-    private Client client;
+    private final Client client;
 
     // Class constructor.
     public ClientGUI(Client dictionaryClient) {
@@ -57,128 +52,116 @@ public class ClientGUI {
         frame.pack();
         frame.setLocationRelativeTo(null);
 
-        queryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String word = wordField.getText();
+        queryButton.addActionListener(e -> {
+            String word = wordField.getText();
 
-                try {
-                    // No words provided.
-                    if (word == null || word.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please enter a word.",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        // Perform operation, then clear the text field.
-                        String response = client.query(word, client.getOutputStream(), client.getInputStream());
-                        textLogArea.append(localDateTime());
-                        textLogArea.append(response);
-                        textLogArea.append("\n");
-                        wordField.setText("");
-                    }
-                }
-                catch (Exception exception) {
-                    textLogArea.append(exception.getMessage());
+            try {
+                // No words provided.
+                if (word == null || word.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a word.",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Perform operation, then clear the text field.
+                    String response = client.query(word, client.getOutputStream(), client.getInputStream());
+                    textLogArea.append(localDateTime());
+                    textLogArea.append(response);
                     textLogArea.append("\n");
+                    wordField.setText("");
                 }
+            }
+            catch (Exception exception) {
+                textLogArea.append(exception.getMessage());
+                textLogArea.append("\n");
             }
         });
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String word = wordField.getText();
-                String meanings = meaningsField.getText();
+        addButton.addActionListener(e -> {
+            String word = wordField.getText();
+            String meanings = meaningsField.getText();
 
-                try {
-                    // No words provided.
-                    if (word == null || word.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please enter a word.",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    // No meanings provided.
-                    if (meanings == null || meanings.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        // Perform operation, then clear the text field.
-                        String response = client.add(word, meanings, client.getOutputStream(), client.getInputStream());
-                        textLogArea.append(localDateTime());
-                        textLogArea.append(response);
-                        textLogArea.append("\n");
-                        wordField.setText("");
-                        meaningsField.setText("");
-                    }
+            try {
+                // No words provided.
+                if (word == null || word.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a word.",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-                catch (Exception exception) {
-                    textLogArea.append(exception.getMessage());
+
+                // No meanings provided.
+                if (meanings == null || meanings.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Perform operation, then clear the text field.
+                    String response = client.add(word, meanings, client.getOutputStream(), client.getInputStream());
+                    textLogArea.append(localDateTime());
+                    textLogArea.append(response);
                     textLogArea.append("\n");
+                    wordField.setText("");
+                    meaningsField.setText("");
                 }
+            }
+            catch (Exception exception) {
+                textLogArea.append(exception.getMessage());
+                textLogArea.append("\n");
             }
         });
 
-        updateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String word = wordField.getText();
-                String meanings = meaningsField.getText();
+        updateButton.addActionListener(e -> {
+            String word = wordField.getText();
+            String meanings = meaningsField.getText();
 
-                try {
-                    // No words provided.
-                    if (word == null || word.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please enter a word.",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    // No meanings provided.
-                    if (meanings == null || meanings.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    else {
-                        // Perform operation, then clear the text field.
-                        String response = client.update(word, meanings, client.getOutputStream(), client.getInputStream());
-                        textLogArea.append(localDateTime());
-                        textLogArea.append(response);
-                        textLogArea.append("\n");
-                        wordField.setText("");
-                        meaningsField.setText("");
-                    }
+            try {
+                // No words provided.
+                if (word == null || word.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a word.",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-                catch (Exception exception) {
-                    textLogArea.append(exception.getMessage());
+
+                // No meanings provided.
+                if (meanings == null || meanings.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please provide a meaning(s).",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+
+                else {
+                    // Perform operation, then clear the text field.
+                    String response = client.update(word, meanings, client.getOutputStream(), client.getInputStream());
+                    textLogArea.append(localDateTime());
+                    textLogArea.append(response);
                     textLogArea.append("\n");
+                    wordField.setText("");
+                    meaningsField.setText("");
                 }
+            }
+            catch (Exception exception) {
+                textLogArea.append(exception.getMessage());
+                textLogArea.append("\n");
             }
         });
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String word = wordField.getText();
-                String response = null;
+        removeButton.addActionListener(e -> {
+            String word = wordField.getText();
+            String response;
 
-                try {
-                    // No words provided.
-                    if (word == null || word.equals("")) {
-                        JOptionPane.showMessageDialog(frame, "Please enter a word.",
-                                "Warning", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    else {
-                        // Perform operation, then clear the text field.
-                        response = client.remove(word, client.getOutputStream(), client.getInputStream());
-                        textLogArea.append(localDateTime());
-                        textLogArea.append(response);
-                        textLogArea.append("\n");
-                        wordField.setText("");
-                    }
+            try {
+                // No words provided.
+                if (word == null || word.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a word.",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-                catch (Exception exception) {
-                    textLogArea.append(exception.getMessage());
+
+                else {
+                    // Perform operation, then clear the text field.
+                    response = client.remove(word, client.getOutputStream(), client.getInputStream());
+                    textLogArea.append(localDateTime());
+                    textLogArea.append(response);
                     textLogArea.append("\n");
+                    wordField.setText("");
                 }
+            }
+            catch (Exception exception) {
+                textLogArea.append(exception.getMessage());
+                textLogArea.append("\n");
             }
         });
     }

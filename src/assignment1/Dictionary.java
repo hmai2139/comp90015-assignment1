@@ -9,7 +9,6 @@ package assignment1;
 // Dependencies.
 import java.util.*;
 import java.nio.file.Paths;
-
 import com.fasterxml.jackson.databind.*;
 
 /*
@@ -42,17 +41,17 @@ public class Dictionary {
 
             // Convert meanings of word (an ArrayList<String>) to String form so we can return.
             ArrayList<String> meanings = words.get(word);
-            String reply = "";
+            StringBuilder reply = new StringBuilder();
             for (String meaning: meanings) {
-                reply += "\n" + "- " + meaning;
+                reply.append("\n" + "- ").append(meaning);
             }
-            return reply;
+            return reply.toString();
         }
         return("No such word exists.");
     }
 
     // Add a new word to dictionary.
-    public synchronized String add(String word, ArrayList<String> meanings) throws Exception {
+    public synchronized String add(String word, ArrayList<String> meanings) {
         word = word.toLowerCase();
 
         // No words provided.
@@ -76,7 +75,7 @@ public class Dictionary {
     }
 
     // Remove a word from dictionary.
-    public synchronized String remove(String word) throws Exception {
+    public synchronized String remove(String word) {
         word = word.toLowerCase();
 
         // No words provided.
@@ -95,7 +94,7 @@ public class Dictionary {
     }
 
     // Update a word's meanings.
-    public synchronized String update(String word, ArrayList<String> meanings) throws Exception {
+    public synchronized String update(String word, ArrayList<String> meanings) {
         word = word.toLowerCase();
 
         // No words provided.

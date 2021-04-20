@@ -6,8 +6,6 @@
 package assignment1;
 
 // Dependencies.
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -23,15 +21,15 @@ public class Client {
     private static final String EXIT = "exit";
 
     // Socket, input and output streams.
-    private Socket socket;
-    private DataInputStream in;
-    private DataOutputStream out;
-    private Scanner scanner;
+    private final Socket socket;
+    private final DataInputStream in;
+    private final DataOutputStream out;
+    private final Scanner scanner;
 
     // Client GUI.
     private ClientGUI gui;
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) {
         try {
             // Get server address and port from STDIN.
             final String SERVER = args[0];
@@ -173,10 +171,7 @@ public class Client {
     public JSONArray stringToJSONArray(String meanings) {
         String[] meaningsArray = meanings.split(",");
         JSONArray meaningsJSON = new JSONArray();
-
-        for (int i = 0; i < meaningsArray.length; i++) {
-            meaningsJSON.add(meaningsArray[i]);
-        }
+        meaningsJSON.addAll(Arrays.asList(meaningsArray));
         return meaningsJSON;
     }
 
